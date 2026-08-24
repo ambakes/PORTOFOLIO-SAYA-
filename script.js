@@ -93,5 +93,5 @@ document.addEventListener("DOMContentLoaded", () => {
             updateThemeUI(isLight);
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
         });
-    }
+    } 
 });
