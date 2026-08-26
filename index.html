@@ -12,6 +12,24 @@
     />
   </head>
   <body>
+    <!-- CUSTOM ANIME CURSOR -->
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+      <div class="preloader-logo">FARLES<span class="dot">.</span></div>
+      <div class="preloader-bar"><span></span></div>
+    </div>
+
+    <!-- SCROLL PROGRESS BAR -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- BACK TO TOP -->
+    <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
     <!-- SAKURA FALLING ANIMATION -->
     <div class="sakura-container" aria-hidden="true">
       <div class="sakura"></div>
@@ -23,22 +41,43 @@
       <div class="sakura"></div>
     </div>
 
+    <!-- ANIME SPARKLE TWINKLE FIELD -->
+    <div class="sparkle-field" aria-hidden="true">
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+      <span class="sparkle"></span>
+    </div>
+
+    <!-- THEME SWITCH LOADING OVERLAY -->
+    <div class="theme-transition" id="themeTransition" aria-hidden="true">
+      <div class="theme-spinner"></div>
+      <p class="theme-transition-text" id="themeTransitionText">Menyalakan mode terang...</p>
+    </div>
+
     <!-- NAVBAR FIXED FULL-WIDTH -->
     <nav class="navbar">
       <div class="nav-logo">FARLES<span class="dot">.</span></div>
 
-      <div class="hamburger" id="hamburger" aria-label="Toggle Navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle Navigation" aria-expanded="false">
+        <span class="hamburger-ring"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
 
       <ul class="nav-links" id="navLinks">
-        <li><a href="#about">About</a></li>
-        <li><a href="#profile">Profile</a></li>
-        <li><a href="#works">Works</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contact" class="btn-nav">Contact</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#profile" class="nav-link">Profile</a></li>
+        <li><a href="#works" class="nav-link">Works</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#contact" class="nav-link btn-nav">Contact</a></li>
         <li>
           <button
             id="themeToggle"
@@ -53,7 +92,9 @@
 
     <!-- HERO SECTION -->
     <section id="about" class="hero-agency">
-      <div class="hero-content">
+      <span class="hud-corner hud-corner-tl" aria-hidden="true"></span>
+      <span class="hud-corner hud-corner-br" aria-hidden="true"></span>
+      <div class="hero-content hero-content-burst">
         <span class="hero-tag"
           ><span class="creator-stamp">PPLG ENGINEER</span> Game & Web
           Developer</span
@@ -225,10 +266,19 @@
         </p>
       </div>
 
+      <!-- NEW: PROJECT FILTER -->
+      <div class="filter-bar" role="tablist" aria-label="Filter proyek">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="web">Web</button>
+        <button class="filter-btn" data-filter="game">Game</button>
+        <button class="filter-btn" data-filter="research">Research</button>
+      </div>
+
       <div class="projects-grid-agency">
         <!-- Project 1: Dongeng Ngawi Kuno -->
         <div
           class="project-card-agency"
+          data-category="web"
           data-img="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop"
           data-caption="Dongeng Ngawi - Interactive Web Story"
         >
@@ -251,6 +301,7 @@
         <!-- Project 2: FPS Gun Mechanics -->
         <div
           class="project-card-agency"
+          data-category="game"
           data-img="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop"
           data-caption="Unity Gun Mechanics & Firearm System"
         >
@@ -273,6 +324,7 @@
         <!-- Project 3: CRUD Management App -->
         <div
           class="project-card-agency"
+          data-category="web"
           data-img="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop"
           data-caption="Python Data Management System"
         >
@@ -295,6 +347,7 @@
         <!-- Project 4: Analisis HKI & Merek -->
         <div
           class="project-card-agency"
+          data-category="research"
           data-img="https://images.unsplash.com/photo-1450133064473-71024230f91b?q=80&w=1200&auto=format&fit=crop"
           data-caption="Legal Protection Analysis - HKI Project"
         >
@@ -363,8 +416,32 @@
 
     <!-- FOOTER / CONTACT -->
     <footer id="contact" class="footer-agency">
-      <h2>Let's Create Something Great</h2>
+      <h2>Write down your impression of my website?</h2>
       <p>Farles Jhonatan Sidete — PPLG Software Engineering Student</p>
+
+      <!-- NEW: CONTACT FORM -->
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nameInput">Nama</label>
+            <input type="text" id="nameInput" name="name" placeholder="Nama kamu" required />
+            <span class="form-error" data-for="nameInput"></span>
+          </div>
+          <div class="form-group">
+            <label for="emailInput">Email</label>
+            <input type="email" id="emailInput" name="email" placeholder="Email saya: jhonatanfarles@gmail.com" required />
+            <span class="form-error" data-for="emailInput"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="messageInput">Pesan</label>
+          <textarea id="messageInput" name="message" rows="4" placeholder="Tuliskan kesan anda.." required></textarea>
+          <span class="form-error" data-for="messageInput"></span>
+        </div>
+        <button type="submit" class="btn-primary form-submit">Kirim Pesan</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+
       <div class="footer-bottom">
         <p>&copy; 2026 Farles. All rights reserved.</p>
       </div>
