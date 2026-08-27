@@ -221,19 +221,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 12. CONTACT FORM VALIDATION
+    // 12. CONTACT FORM VALIDATION + KIRIM VIA MAILTO
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
+    const TUJUAN_EMAIL = 'jhonatanfarles@gmail.com';
 
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             let isValid = true;
 
+            const nameInput = document.getElementById('nameInput');
+            const emailInput = document.getElementById('emailInput');
+            const messageInput = document.getElementById('messageInput');
+
             const fields = [
-                { input: document.getElementById('nameInput'), message: 'Nama wajib diisi.' },
-                { input: document.getElementById('emailInput'), message: 'Masukkan email yang valid.' },
-                { input: document.getElementById('messageInput'), message: 'Pesan tidak boleh kosong.' },
+                { input: nameInput, message: 'Nama wajib diisi.' },
+                { input: emailInput, message: 'Masukkan email yang valid.' },
+                { input: messageInput, message: 'Pesan tidak boleh kosong.' },
             ];
 
             fields.forEach(({ input, message }) => {
@@ -263,9 +268,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // No backend connected yet — show confirmation and reset.
+            const nama = nameInput.value.trim();
+            const emailPengirim = emailInput.value.trim();
+            const pesan = messageInput.value.trim();
+
+            const subject = `Pesan baru dari ${nama} (Portofolio)`;
+            const body = `Nama: ${nama}\nEmail: ${emailPengirim}\n\nPesan:\n${pesan}`;
+
+            const mailtoLink = `mailto:${TUJUAN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            window.location.href = mailtoLink;
+
             if (formStatus) {
-                formStatus.textContent = 'Pesan terkirim! Terima kasih sudah menghubungi saya.';
+                formStatus.textContent = 'Aplikasi email kamu akan terbuka — tinggal klik "Kirim" di sana untuk menyelesaikan.';
                 formStatus.classList.add('success');
             }
             contactForm.reset();
