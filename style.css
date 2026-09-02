@@ -62,6 +62,7 @@ body.light-mode {
 
 html {
   scroll-behavior: smooth;
+  font-size: 112.5%; /* Pengganti zoom murni standar CSS (skala ~1.12x / setara perbesaran zoom) */
 }
 
 body {
@@ -665,13 +666,11 @@ body.light-mode .btn-secondary {
   display: none;
 }
 
-/* =======================================================
-   PROJECTS GRID AGENCY (MEMBUAT KARTU CRUD DI TENGAH)
-   ======================================================= */
+/* PROJECTS GRID AGENCY */
 .projects-grid-agency {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Membuat kartu ganjil/CRUD otomatis berada di tengah */
+  justify-content: center;
   gap: clamp(20px, 4vw, 40px);
   width: 100%;
 }
@@ -683,7 +682,7 @@ body.light-mode .btn-secondary {
   padding: clamp(16px, 3vw, 25px);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  width: calc(50% - clamp(10px, 2vw, 20px)); /* Menjaga ukuran 2 kolom */
+  width: calc(50% - clamp(10px, 2vw, 20px));
   min-width: 300px;
   box-sizing: border-box;
 }
@@ -1129,7 +1128,7 @@ body.light-mode .sparkle {
   to { transform: rotate(360deg); }
 }
 
-/* CUSTOM ANIME CURSOR (desktop / fine pointer only) */
+/* CUSTOM ANIME CURSOR */
 @media (hover: hover) and (pointer: fine) {
   body, a, button, .project-card-agency, .filter-btn, .service-card {
     cursor: none;
@@ -1338,7 +1337,7 @@ body.light-mode .hamburger {
   transform: translateY(0);
 }
 
-/* ================= MEDIA QUERIES (mobile polish) ================= */
+/* MEDIA QUERIES */
 @media (max-width: 992px) {
   .hud-corner { display: none; }
 
@@ -1363,7 +1362,7 @@ body.light-mode .hamburger {
 
   .nav-links.active { right: 0; }
 
-  .project-card-agency { width: 100%; } /* Kartu full-width di HP / Tablet */
+  .project-card-agency { width: 100%; }
 
   .about-grid { grid-template-columns: 1fr; gap: 26px; }
 
@@ -1373,7 +1372,6 @@ body.light-mode .hamburger {
 
   .back-to-top { right: 18px; bottom: 18px; }
 
-  /* Reduce particle clutter on tablets/phones */
   .sakura:nth-child(n+5) { display: none; }
   .sparkle:nth-child(n+6) { display: none; }
 }
@@ -1391,12 +1389,11 @@ body.light-mode .hamburger {
 
   .footer-agency h2 { padding: 0 4px; }
 
-  /* Cut particles further on small phones for performance */
   .sakura:nth-child(n+3) { display: none; }
   .sparkle:nth-child(n+4) { display: none; }
 }
 
-/* ===== TAMBAHAN: SOCIAL LINKS DI PROFILE CARD ===== */
+/* SOCIAL LINKS */
 .social-links {
   display: flex;
   gap: 14px;
@@ -1425,7 +1422,7 @@ body.light-mode .hamburger {
   box-shadow: 0 6px 16px var(--accent-glow);
 }
 
-/* ===== TAMBAHAN: LINK "LIHAT PROYEK" DI SETIAP CARD ===== */
+/* PROJECT LINK */
 .project-link {
   display: inline-flex;
   align-items: center;
@@ -1445,8 +1442,4 @@ body.light-mode .hamburger {
 
 .project-link i {
   font-size: 0.78rem;
-}
-
-body {
-  zoom: 125%; /* Ubah angka ini (misal: 110%, 120%, 150%) untuk memperbesar */
 }
