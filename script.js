@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. MODAL POPUP FOR PROJECTS
+    // 1. MODAL POPUP FOR PROJECTS (SUPPORT IMAGE & VIDEO)
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImg");
+    const modalVideo = document.getElementById("modalVideo");
     const modalCaption = document.getElementById("modalCaption");
     const closeBtn = document.querySelector(".modal-close");
     const projectCards = document.querySelectorAll(".project-card-agency");
@@ -10,17 +11,39 @@ document.addEventListener("DOMContentLoaded", () => {
         projectCards.forEach(card => {
             card.addEventListener("click", () => {
                 const imgSrc = card.getAttribute("data-img");
+                const videoSrc = card.getAttribute("data-video");
                 const caption = card.getAttribute("data-caption");
 
-                if (imgSrc) {
-                    modal.style.display = "flex";
+                // Reset modal state
+                modalImg.style.display = "none";
+                modalVideo.style.display = "none";
+                modalVideo.pause();
+                modalVideo.src = "";
+
+                if (videoSrc) {
+                    // Putar video jika ada data-video
+                    modalVideo.src = videoSrc;
+                    modalVideo.style.display = "block";
+                    modalVideo.play();
+                } else if (imgSrc) {
+                    // Tampilkan gambar biasa jika tidak ada video
                     modalImg.src = imgSrc;
-                    modalCaption.textContent = caption;
+                    modalImg.style.display = "block";
                 }
+
+                modalCaption.textContent = caption || "";
+                modal.style.display = "flex";
             });
         });
 
-        const closeModal = () => { modal.style.display = "none"; };
+        const closeModal = () => { 
+            modal.style.display = "none"; 
+            if (modalVideo) {
+                modalVideo.pause();
+                modalVideo.src = "";
+            }
+        };
+
         closeBtn.addEventListener("click", closeModal);
         window.addEventListener("click", (e) => {
             if (e.target === modal) closeModal();
@@ -75,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener('scroll', revealOnScroll);
     revealOnScroll();
 
-    // 5. DARK / LIGHT MODE TOGGLE (with loading transition)
+    // 5. DARK / LIGHT MODE TOGGLE
     const themeToggleBtn = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     const themeTransition = document.getElementById('themeTransition');
@@ -111,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 themeTransition.classList.add('active');
             }
 
-            // Brief "loading" beat before the theme actually swaps
             setTimeout(() => {
                 updateThemeUI(goingLight);
                 localStorage.setItem('theme', goingLight ? 'light' : 'dark');
@@ -124,9 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ===================== NEW FEATURES =====================
-
-    // 6. CUSTOM ANIME CURSOR (only on devices with a real mouse)
+    // 6. CUSTOM ANIME CURSOR
     const cursorDot = document.getElementById('cursorDot');
     const cursorRing = document.getElementById('cursorRing');
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -153,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 7. PRELOADER — hide once page is fully loaded
+    // 7. PRELOADER
     const preloader = document.getElementById('preloader');
     if (preloader) {
         window.addEventListener('load', () => {
@@ -221,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 12. CONTACT FORM VALIDATION + KIRIM VIA MAILTO
+    // 12. CONTACT FORM VALIDATION + MAILTO
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
     const TUJUAN_EMAIL = 'jhonatanfarles@gmail.com';
