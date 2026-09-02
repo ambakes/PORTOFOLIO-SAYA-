@@ -665,10 +665,15 @@ body.light-mode .btn-secondary {
   display: none;
 }
 
+/* =======================================================
+   PROJECTS GRID AGENCY (MEMBUAT KARTU CRUD DI TENGAH)
+   ======================================================= */
 .projects-grid-agency {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Membuat kartu ganjil/CRUD otomatis berada di tengah */
   gap: clamp(20px, 4vw, 40px);
+  width: 100%;
 }
 
 .project-card-agency {
@@ -678,6 +683,9 @@ body.light-mode .btn-secondary {
   padding: clamp(16px, 3vw, 25px);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: calc(50% - clamp(10px, 2vw, 20px)); /* Menjaga ukuran 2 kolom */
+  min-width: 300px;
+  box-sizing: border-box;
 }
 
 .project-card-agency:hover {
@@ -1355,7 +1363,7 @@ body.light-mode .hamburger {
 
   .nav-links.active { right: 0; }
 
-  .projects-grid-agency { grid-template-columns: 1fr; }
+  .project-card-agency { width: 100%; } /* Kartu full-width di HP / Tablet */
 
   .about-grid { grid-template-columns: 1fr; gap: 26px; }
 
@@ -1437,4 +1445,8 @@ body.light-mode .hamburger {
 
 .project-link i {
   font-size: 0.78rem;
+}
+
+body {
+  zoom: 125%; /* Ubah angka ini (misal: 110%, 120%, 150%) untuk memperbesar */
 }

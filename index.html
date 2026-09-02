@@ -14,26 +14,32 @@
       href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <!-- Font Awesome untuk Icon -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
   <body>
+    <!-- CUSTOM ANIME CURSOR -->
     <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
     <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
+    <!-- PRELOADER -->
     <div class="preloader" id="preloader">
       <div class="preloader-logo">FARLES<span class="dot">.</span></div>
       <div class="preloader-bar"><span></span></div>
     </div>
 
+    <!-- SCROLL PROGRESS BAR -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
+    <!-- BACK TO TOP -->
     <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
       <i class="fa-solid fa-arrow-up"></i>
     </button>
 
+    <!-- SAKURA FALLING ANIMATION -->
     <div class="sakura-container" aria-hidden="true">
       <div class="sakura"></div>
       <div class="sakura"></div>
@@ -42,6 +48,7 @@
       <div class="sakura"></div>
     </div>
 
+    <!-- ANIME SPARKLE TWINKLE FIELD -->
     <div class="sparkle-field" aria-hidden="true">
       <span class="sparkle"></span>
       <span class="sparkle"></span>
@@ -51,11 +58,13 @@
       <span class="sparkle"></span>
     </div>
 
+    <!-- THEME SWITCH LOADING OVERLAY -->
     <div class="theme-transition" id="themeTransition" aria-hidden="true">
       <div class="theme-spinner"></div>
       <p class="theme-transition-text" id="themeTransitionText">Menyalakan mode terang...</p>
     </div>
 
+    <!-- NAVBAR FIXED FULL-WIDTH -->
     <nav class="navbar">
       <div class="nav-logo">FARLES<span class="dot">.</span></div>
 
@@ -85,6 +94,7 @@
       </ul>
     </nav>
 
+    <!-- HERO SECTION -->
     <section id="about" class="hero-agency">
       <span class="hud-corner hud-corner-tl" aria-hidden="true"></span>
       <span class="hud-corner hud-corner-br" aria-hidden="true"></span>
@@ -113,6 +123,7 @@
       </div>
     </section>
 
+    <!-- PROFILE / ABOUT ME SECTION -->
     <section id="profile" class="section-full">
       <div class="section-header-large">
         <h2>About Me</h2>
@@ -123,6 +134,7 @@
       </div>
 
       <div class="about-grid">
+        <!-- MAIN PROFILE CARD -->
         <div class="profile-card">
           <div class="profile-avatar-wrapper">
             <img
@@ -182,6 +194,7 @@
 
           <div class="profile-divider"></div>
 
+          <!-- SOCIAL LINKS -->
           <div class="social-links">
             <a href="https://github.com/ambakes" target="_blank" rel="noopener" aria-label="GitHub" class="social-icon">
               <i class="fa-brands fa-github"></i>
@@ -195,7 +208,9 @@
           </div>
         </div>
 
+        <!-- RIGHT CONTENT COLUMN -->
         <div class="about-content-col">
+          <!-- EDUCATION TIMELINE CARD -->
           <div class="education-card">
             <h4>
               <i class="fa-solid fa-graduation-cap"></i> Riwayat Pendidikan
@@ -227,6 +242,7 @@
             </div>
           </div>
 
+          <!-- MOTIVATION CYBER TERMINAL CARD -->
           <div class="quote-terminal-card">
             <div class="terminal-header">
               <div class="terminal-dots">
@@ -257,22 +273,24 @@
       </div>
     </section>
 
+    <!-- SHOWCASE / SELECTED WORKS -->
     <section id="works" class="section-full">
       <div class="section-header-large">
         <h2>Hall of Creations</h2>
         <p class="section-desc">
-          Proyek pilihan dari game development, aplikasi web, hingga website CMS.
+          Proyek pilihan dari game development, aplikasi web, hingga pemrograman Python.
         </p>
       </div>
 
+      <!-- PROJECT FILTER -->
       <div class="filter-bar" role="tablist" aria-label="Filter proyek">
         <button class="filter-btn active" data-filter="all">Semua</button>
         <button class="filter-btn" data-filter="web">Web</button>
         <button class="filter-btn" data-filter="game">Game</button>
-        <button class="filter-btn" data-filter="research">Research</button>
       </div>
 
       <div class="projects-grid-agency">
+        <!-- Project 1: Gelar Karya SMK TI AIRLANGGA -->
         <div
           class="project-card-agency"
           data-category="web"
@@ -301,6 +319,7 @@
           </div>
         </div>
 
+        <!-- Project 2: Misteri Ambaruwoo -->
         <div
           class="project-card-agency"
           data-category="game"
@@ -331,49 +350,24 @@
           </div>
         </div>
 
+        <!-- Project 3: CRUD Management App (Foto VS Code Baru) -->
         <div
           class="project-card-agency"
           data-category="web"
-          data-img="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop"
-          data-caption="Python Data Management System"
+          data-img="CRUD 1.PY.png"
+          data-caption="CRUD 1.PY - Aplikasi Manajemen Member dengan Python"
         >
           <div class="img-container-agency">
             <img
-              src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop"
-              alt="Python App"
+              src="Screenshot 2026-09-02 222534.png"
+              alt="CRUD Python Project"
             />
           </div>
           <div class="project-info">
             <span class="project-tag">Python / CLI</span>
             <h4>CRUD Management App</h4>
             <p>
-              Aplikasi pengelolaan data berbasis data struktur list & dictionary
-              yang efisien.
-            </p>
-            <a href="#" class="project-link" target="_blank" rel="noopener" onclick="event.stopPropagation()">
-              Lihat Proyek <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-          </div>
-        </div>
-
-        <div
-          class="project-card-agency"
-          data-category="research"
-          data-img="https://images.unsplash.com/photo-1450133064473-71024230f91b?q=80&w=1200&auto=format&fit=crop"
-          data-caption="Legal Protection Analysis - HKI Project"
-        >
-          <div class="img-container-agency">
-            <img
-              src="https://images.unsplash.com/photo-1450133064473-71024230f91b?q=80&w=800&auto=format&fit=crop"
-              alt="HKI Research"
-            />
-          </div>
-          <div class="project-info">
-            <span class="project-tag">Research / Intellectual Property</span>
-            <h4>Analisis HKI & Merek</h4>
-            <p>
-              Studi lapangan identifikasi dan analisis perlindungan hukum produk
-              konsumen.
+              Aplikasi pengelolaan data member berbasis Python menggunakan fungsi penambahan, pengubahan, dan penampilan data berstruktur list & dictionary.
             </p>
             <a href="#" class="project-link" target="_blank" rel="noopener" onclick="event.stopPropagation()">
               Lihat Proyek <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -383,6 +377,7 @@
       </div>
     </section>
 
+    <!-- SKILLS & SERVICES -->
     <section id="skills" class="section-full">
       <div class="section-header-large">
         <h2>Skills & Technologies</h2>
@@ -427,6 +422,7 @@
       </div>
     </section>
 
+    <!-- FOOTER / CONTACT -->
     <footer id="contact" class="footer-agency">
       <h2>Tulis kesan anda!</h2>
       <p>Farles Jhonatan Sidete — PPLG Software Engineering Student</p>
@@ -458,6 +454,7 @@
       </div>
     </footer>
 
+    <!-- MODAL POPUP IMAGES & VIDEOS -->
     <div id="imageModal" class="modal">
       <span class="modal-close">&times;</span>
       <img class="modal-content" id="modalImg" alt="Preview Karya" style="display: none;" />
