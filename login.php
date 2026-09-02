@@ -3,7 +3,7 @@
 // LOGIN.PHP — VERSI SEDERHANA
 // Cara kerja:
 // 1. Kalau ada ?pesan=... di URL (GET) -> tampilkan notifikasi
-// 2. Kalau form dikirim (POST) -> cek username & password ke users.txt
+// 2. Kalau form dikirim (POST) -> cek username, email, & password ke users.txt
 // ============================================
 
 session_start(); // dipakai buat nyimpen status "sedang login"
@@ -24,6 +24,7 @@ if (isset($_GET["pesan"])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $username = $_POST["username"];
+    $email    = $_POST["email"];
     $password = $_POST["password"];
 
     $login_berhasil = false;
@@ -35,10 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         foreach ($baris_baris as $baris) {
             // format tiap baris: username|email|password
             $data = explode("|", $baris);
-            $user_di_file     = $data[0];
+            $username_di_file = $data[0];
+            $email_di_file    = $data[1];
             $password_di_file = $data[2];
 
-            if ($user_di_file == $username && $password_di_file == $password) {
+            if ($username_di_file == $username && $email_di_file == $email && $password_di_file == $password) {
                 $login_berhasil = true;
             }
         }
@@ -50,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: dashboard.php");
         exit;
     } else {
-        $pesan_error = "Username atau password salah!";
+        $pesan_error = "Username, email, atau password salah!";
     }
 }
 ?>
@@ -167,6 +169,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-group">
           <label>Username</label>
           <input type="text" name="username" placeholder="username kamu" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="email kamu" required>
         </div>
         <div class="form-group">
           <label>Password</label>
