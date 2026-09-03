@@ -1443,3 +1443,62 @@ body.light-mode .hamburger {
 .project-link i {
   font-size: 0.78rem;
 }
+
+/* ===== TAMBAHAN: PLAY OVERLAY (ICON VIDEO DI ATAS THUMBNAIL) ===== */
+.img-container-agency {
+  position: relative;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.play-overlay i {
+  font-size: 3.5rem;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+.project-card-agency:hover .play-overlay {
+  opacity: 1;
+}
+
+/* ===== TAMBAHAN: PROGRESS BAR GAME ===== */
+.project-progress {
+  margin-top: 14px;
+}
+
+.progress-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+body.light-mode .progress-bar {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 20px;
+  transition: width 0.6s ease;
+}
