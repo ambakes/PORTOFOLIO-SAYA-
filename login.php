@@ -1,12 +1,9 @@
 <?php
 // ============================================
 // LOGIN.PHP — GABUNGAN (USER BIASA + ADMIN)
-// Cara kerja:
-// 1. Cek dulu apakah data yang dimasukkan cocok dengan akun ADMIN (hardcode).
+// 1. Cek dulu apakah data cocok dengan akun ADMIN (hardcode).
 //    Kalau cocok -> langsung ke dashboard_admin.php
-// 2. Kalau bukan admin -> cek ke users.txt seperti biasa (user biasa).
-//    Kalau cocok -> ke dashboard.php
-// 3. Kalau dua-duanya tidak cocok -> tampilkan pesan error
+// 2. Kalau bukan admin -> cek ke users.txt (user biasa) -> dashboard.php
 // ============================================
 
 session_start();
@@ -14,12 +11,10 @@ session_start();
 $pesan_error = "";
 $pesan_info  = "";
 
-// Data admin yang di-hardcode
 $ADMIN_USERNAME = "AdminFarles";
 $ADMIN_EMAIL    = "jhonatanfarles@gmail.com";
 $ADMIN_PASSWORD = "sidete1122";
 
-// --- BAGIAN GET: baca pesan dari URL, misal login.php?pesan=daftar_sukses ---
 if (isset($_GET["pesan"])) {
     if ($_GET["pesan"] == "daftar_sukses") {
         $pesan_info = "Registrasi berhasil! Silakan login.";
@@ -28,38 +23,29 @@ if (isset($_GET["pesan"])) {
     }
 }
 
-// --- BAGIAN POST: proses login ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $username = $_POST["username"];
     $email    = $_POST["email"];
     $password = $_POST["password"];
 
-    // 1. CEK APAKAH INI LOGIN ADMIN
+    // 1. CEK LOGIN ADMIN
     if ($username === $ADMIN_USERNAME && $email === $ADMIN_EMAIL && $password === $ADMIN_PASSWORD) {
-
-        session_unset(); // bersihkan session lama biar nggak nyangkut
-
+        session_unset();
         $_SESSION["username"] = $username;
-        $_SESSION["is_admin"] = true; // role admin
-
+        $_SESSION["is_admin"] = true;
         header("Location: dashboard_admin.php");
         exit;
     }
 
-    // 2. KALAU BUKAN ADMIN, CEK KE users.txt (LOGIN USER BIASA)
+    // 2. CEK LOGIN USER BIASA (users.txt)
     $login_berhasil = false;
     $baris_baris = file("users.txt", FILE_IGNORE_NEW_LINES);
 
     if ($baris_baris) {
         foreach ($baris_baris as $baris) {
-            // format tiap baris: username|email|password
             $data = explode("|", $baris);
-            $username_di_file = $data[0];
-            $email_di_file    = $data[1];
-            $password_di_file = $data[2];
-
-            if ($username_di_file == $username && $email_di_file == $email && $password_di_file == $password) {
+            if ($data[0] == $username && $data[1] == $email && $data[2] == $password) {
                 $login_berhasil = true;
             }
         }
@@ -67,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($login_berhasil) {
         session_unset();
-        $_SESSION["username"] = $username; // role user biasa (tanpa is_admin)
+        $_SESSION["username"] = $username;
         header("Location: dashboard.php");
         exit;
     } else {
@@ -81,66 +67,85 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — Farles</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
+    .auth-page {
       min-height: 100vh;
-      background-color: #050508;
-      background-image: radial-gradient(circle at 50% 0%, rgba(126, 34, 206, 0.25), transparent 70%);
-      color: #f0f0f0;
-      font-family: "Inter", sans-serif;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
-    .wrapper { width: 100%; max-width: 420px; }
-    .logo {
+    .auth-theme-toggle {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      z-index: 1200;
+    }
+    .auth-wrapper { width: 100%; max-width: 420px; position: relative; z-index: 1; }
+    .auth-logo {
       text-align: center;
-      font-family: "Sora", sans-serif;
+      font-family: var(--font-display);
       font-size: 1.6rem;
       font-weight: 800;
       letter-spacing: 2px;
       margin-bottom: 24px;
+      color: var(--text-primary);
     }
-    .logo .dot { color: #c084fc; }
-    .card {
-      background: #0d0e15;
-      border: 1px solid rgba(168, 85, 247, 0.15);
-      border-radius: 16px;
+    .auth-logo .dot { color: var(--gold); }
+    .auth-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
       padding: 32px 28px;
+      backdrop-filter: blur(var(--blur-strong));
       box-shadow: 0 15px 40px rgba(0,0,0,0.4);
     }
-    .card h1 { font-family: "Sora", sans-serif; font-size: 1.5rem; margin-bottom: 8px; }
-    .card p.sub {
-      color: #a0a5b5;
+    .auth-card h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .auth-card p.sub {
+      color: var(--text-secondary);
       font-size: 0.9rem;
       margin-bottom: 22px;
-      font-family: "JetBrains Mono", monospace;
+      font-family: var(--font-mono);
     }
-    .form-group { margin-bottom: 16px; }
-    .form-group label {
+    .auth-form-group { margin-bottom: 16px; }
+    .auth-form-group label {
       display: block;
       font-size: 0.78rem;
-      color: #a0a5b5;
+      color: var(--text-secondary);
       margin-bottom: 6px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .form-group input {
+    .auth-form-group input {
       width: 100%;
       background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 12px 14px;
-      color: #f0f0f0;
+      color: var(--text-primary);
       font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .form-group input:focus { outline: none; border-color: #8b34e0; }
-    button {
+    body.light-mode .auth-form-group input { background: rgba(0,0,0,0.03); }
+    .auth-form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .auth-btn {
       width: 100%;
-      background-color: #8b34e0;
-      color: #fff;
+      background-color: var(--accent);
+      color: #ffffff;
       padding: 12px;
       border: none;
       border-radius: 10px;
@@ -148,11 +153,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       font-size: 1rem;
       cursor: pointer;
       margin-top: 6px;
+      font-family: inherit;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
     }
-    button:hover { background-color: #a855f7; }
-    .switch { text-align: center; margin-top: 18px; font-size: 0.9rem; color: #a0a5b5; }
-    .switch a { color: #c084fc; text-decoration: none; font-weight: 600; }
-    .alert {
+    .auth-btn:hover { background-color: var(--accent-hover); box-shadow: 0 0 20px var(--accent-glow); }
+    .auth-switch { text-align: center; margin-top: 18px; font-size: 0.9rem; color: var(--text-secondary); }
+    .auth-switch a { color: var(--gold); text-decoration: none; font-weight: 600; }
+    .auth-alert {
       background: rgba(239, 68, 68, 0.08);
       border: 1px solid rgba(239, 68, 68, 0.35);
       color: #fca5a5;
@@ -161,47 +168,133 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       font-size: 0.85rem;
       margin-bottom: 18px;
     }
-    .alert-sukses {
+    .auth-alert-sukses {
       background: rgba(34, 197, 94, 0.08);
       border: 1px solid rgba(34, 197, 94, 0.35);
       color: #86efac;
     }
+
+    /* PASTIKAN CURSOR NORMAL SELALU TERLIHAT DI HALAMAN INI */
+    .cursor-dot, .cursor-ring { display: none !important; }
+    @media (hover: hover) and (pointer: fine) {
+      body, a, button, input, textarea,
+      .action-card, .stat-card, .filter-btn, .service-card {
+        cursor: auto !important;
+      }
+      a, button, .action-card, .auth-btn, .logout-btn {
+        cursor: pointer !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="logo">FARLES<span class="dot">.</span></div>
-    <div class="card">
-      <h1>Selamat Datang</h1>
-      <p class="sub">&gt; masuk untuk melanjutkan sesi kamu</p>
 
-      <?php if ($pesan_error != "") { ?>
-        <div class="alert"><?= htmlspecialchars($pesan_error) ?></div>
-      <?php } ?>
+  <!-- CUSTOM ANIME CURSOR -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-      <?php if ($pesan_info != "") { ?>
-        <div class="alert alert-sukses"><?= htmlspecialchars($pesan_info) ?></div>
-      <?php } ?>
+  <!-- SAKURA FALLING ANIMATION -->
+  <div class="sakura-container" aria-hidden="true">
+    <div class="sakura"></div>
+    <div class="sakura"></div>
+    <div class="sakura"></div>
+    <div class="sakura"></div>
+    <div class="sakura"></div>
+  </div>
 
-      <!-- FORM DIKIRIM PAKAI METHOD POST -->
-      <form method="POST" action="login.php">
-        <div class="form-group">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="username kamu" required>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" name="email" placeholder="email kamu" required>
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" name="password" placeholder="password kamu" required>
-        </div>
-        <button type="submit">Login</button>
-      </form>
+  <!-- SPARKLE FIELD -->
+  <div class="sparkle-field" aria-hidden="true">
+    <span class="sparkle"></span>
+    <span class="sparkle"></span>
+    <span class="sparkle"></span>
+    <span class="sparkle"></span>
+    <span class="sparkle"></span>
+    <span class="sparkle"></span>
+  </div>
 
-      <p class="switch">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+  <!-- THEME TOGGLE -->
+  <button id="themeToggle" class="theme-toggle auth-theme-toggle" aria-label="Toggle Theme">
+    <span id="themeIcon">☀️</span>
+  </button>
+
+  <div class="auth-page">
+    <div class="auth-wrapper">
+      <div class="auth-logo">FARLES<span class="dot">.</span></div>
+      <div class="auth-card">
+        <h1>Selamat Datang</h1>
+        <p class="sub">&gt; masuk untuk melanjutkan sesi kamu</p>
+
+        <?php if ($pesan_error != "") { ?>
+          <div class="auth-alert"><?= htmlspecialchars($pesan_error) ?></div>
+        <?php } ?>
+
+        <?php if ($pesan_info != "") { ?>
+          <div class="auth-alert auth-alert-sukses"><?= htmlspecialchars($pesan_info) ?></div>
+        <?php } ?>
+
+        <form method="POST" action="login.php">
+          <div class="auth-form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="username kamu" required>
+          </div>
+          <div class="auth-form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="email kamu" required>
+          </div>
+          <div class="auth-form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="password kamu" required>
+          </div>
+          <button type="submit" class="auth-btn">Login</button>
+        </form>
+
+        <p class="auth-switch">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+      </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const themeToggleBtn = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const updateThemeUI = (isLight) => {
+        document.body.classList.toggle('light-mode', isLight);
+        if (themeIcon) themeIcon.textContent = isLight ? '🌙' : '☀️';
+      };
+      updateThemeUI(localStorage.getItem('theme') === 'light');
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+          const goingLight = !document.body.classList.contains('light-mode');
+          updateThemeUI(goingLight);
+          localStorage.setItem('theme', goingLight ? 'light' : 'dark');
+        });
+      }
+
+      // CUSTOM ANIME CURSOR
+      const cursorDot = document.getElementById('cursorDot');
+      const cursorRing = document.getElementById('cursorRing');
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      if (cursorDot && cursorRing && canHover) {
+        document.addEventListener('mousemove', (e) => {
+          cursorDot.style.left = e.clientX + 'px';
+          cursorDot.style.top = e.clientY + 'px';
+          cursorRing.style.left = e.clientX + 'px';
+          cursorRing.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', () => {
+          cursorRing.style.transform = 'translate(-50%, -50%) scale(0.85)';
+        });
+        document.addEventListener('mouseup', () => {
+          cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+        const hoverSelector = 'a, button, input, textarea, .action-card, .stat-card';
+        document.querySelectorAll(hoverSelector).forEach(el => {
+          el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+          el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+      }
+    });
+  </script>
 </body>
 </html>
