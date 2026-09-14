@@ -1,15 +1,23 @@
 <?php
 // ============================================
-// LOGIN.PHP — VERSI SEDERHANA
+// LOGIN.PHP — GABUNGAN (USER BIASA + ADMIN)
 // Cara kerja:
-// 1. Kalau ada ?pesan=... di URL (GET) -> tampilkan notifikasi
-// 2. Kalau form dikirim (POST) -> cek username, email, & password ke users.txt
+// 1. Cek dulu apakah data yang dimasukkan cocok dengan akun ADMIN (hardcode).
+//    Kalau cocok -> langsung ke dashboard_admin.php
+// 2. Kalau bukan admin -> cek ke users.txt seperti biasa (user biasa).
+//    Kalau cocok -> ke dashboard.php
+// 3. Kalau dua-duanya tidak cocok -> tampilkan pesan error
 // ============================================
 
-session_start(); // dipakai buat nyimpen status "sedang login"
+session_start();
 
 $pesan_error = "";
 $pesan_info  = "";
+
+// Data admin yang di-hardcode
+$ADMIN_USERNAME = "AdminFarles";
+$ADMIN_EMAIL    = "jhonatanfarles@gmail.com";
+$ADMIN_PASSWORD = "sidete1122";
 
 // --- BAGIAN GET: baca pesan dari URL, misal login.php?pesan=daftar_sukses ---
 if (isset($_GET["pesan"])) {
@@ -27,9 +35,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email    = $_POST["email"];
     $password = $_POST["password"];
 
-    $login_berhasil = false;
+    // 1. CEK APAKAH INI LOGIN ADMIN
+    if ($username === $ADMIN_USERNAME && $email === $ADMIN_EMAIL && $password === $ADMIN_PASSWORD) {
 
-    // Baca semua baris di users.txt
+        session_unset(); // bersihkan session lama biar nggak nyangkut
+
+        $_SESSION["username"] = $username;
+        $_SESSION["is_admin"] = true; // role admin
+
+        header("Location: dashboard_admin.php");
+        exit;
+    }
+
+    // 2. KALAU BUKAN ADMIN, CEK KE users.txt (LOGIN USER BIASA)
+    $login_berhasil = false;
     $baris_baris = file("users.txt", FILE_IGNORE_NEW_LINES);
 
     if ($baris_baris) {
@@ -47,8 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($login_berhasil) {
-        // Simpan status login ke session
-        $_SESSION["username"] = $username;
+        session_unset();
+        $_SESSION["username"] = $username; // role user biasa (tanpa is_admin)
         header("Location: dashboard.php");
         exit;
     } else {
@@ -157,11 +176,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <p class="sub">&gt; masuk untuk melanjutkan sesi kamu</p>
 
       <?php if ($pesan_error != "") { ?>
-        <div class="alert"><?= $pesan_error ?></div>
+        <div class="alert"><?= htmlspecialchars($pesan_error) ?></div>
       <?php } ?>
 
       <?php if ($pesan_info != "") { ?>
-        <div class="alert alert-sukses"><?= $pesan_info ?></div>
+        <div class="alert alert-sukses"><?= htmlspecialchars($pesan_info) ?></div>
       <?php } ?>
 
       <!-- FORM DIKIRIM PAKAI METHOD POST -->
