@@ -1,4 +1,17 @@
+<?php
+// ============================================
+// DASHBOARD.PHP — USER BIASA
+// ============================================
 
+session_start();
+
+if (!isset($_SESSION["username"])) {
+    header("Location: login.php");
+    exit;
+}
+
+$nama_user = htmlspecialchars($_SESSION["username"]);
+?>
 <!doctype html>
 <html lang="id">
 <head>
