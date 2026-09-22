@@ -33,7 +33,7 @@
       });
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setSidebar(false); });
 
-      // CUSTOM ANIME CURSOR
+      // CUSTOM ANIME CURSOR (dimatiin manual lewat CSS di header.php, ini dibiarin no-op)
       const cursorDot = document.getElementById('cursorDot');
       const cursorRing = document.getElementById('cursorRing');
       const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -51,7 +51,7 @@
         document.addEventListener('mouseup', () => {
           cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
         });
-        const hoverSelector = 'a, button, input, textarea, .action-card, .stat-card';
+        const hoverSelector = 'a, button, input, textarea, .action-card, .stat-card, .manage-project-card';
         document.querySelectorAll(hoverSelector).forEach(el => {
           el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
           el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));

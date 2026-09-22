@@ -1,10 +1,13 @@
 <?php
 // ============================================
+// DASHBOARD_ADMIN.PHP
+// ============================================
+$active_page = 'dashboard';
+
 include 'layouts/auth.php';
 include 'layouts/header.php';
-include 'layouts/sidebar.php'
+include 'layouts/sidebar.php';
 ?>
-
 
     <div class="container">
 
@@ -46,7 +49,7 @@ include 'layouts/sidebar.php'
             <div class="action-desc">Buka halaman utama situs</div>
           </div>
         </a>
-        <a href="index.html#works" class="action-card">
+        <a href="projects.php" class="action-card">
           <i class="fa-solid fa-briefcase"></i>
           <div>
             <div class="action-title">Kelola Proyek</div>
@@ -62,8 +65,8 @@ include 'layouts/sidebar.php'
         </a>
       </div>
 
-    </div>  
-  <?php
-include 'layouts/footer.php'
+    </div>
 
+<?php
+include 'layouts/footer.php';
 ?>

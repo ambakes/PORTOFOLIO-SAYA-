@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard — Farles</title>
+  <title>Admin Panel — Farles</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -123,6 +123,44 @@
     .action-card .action-title { font-weight: 600; font-size: 0.95rem; }
     .action-card .action-desc { color: var(--text-secondary); font-size: 0.8rem; margin-top: 2px; }
 
+    /* ================= KELOLA PROYEK ================= */
+    .projects-page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; }
+    .projects-note {
+      background: var(--card-bg); border: 1px dashed var(--border-color); border-radius: var(--radius-md);
+      padding: 14px 18px; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 26px; line-height: 1.6;
+    }
+    .projects-manage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .manage-project-card {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+      overflow: hidden; backdrop-filter: blur(var(--blur-strong)); transition: all 0.25s ease;
+    }
+    .manage-project-card:hover { transform: translateY(-4px); border-color: var(--text-primary); }
+    .manage-project-thumb { width: 100%; height: 170px; overflow: hidden; }
+    .manage-project-thumb img {
+      width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%);
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+    .manage-project-card:hover .manage-project-thumb img { transform: scale(1.05); filter: grayscale(0%); }
+    .manage-project-body { padding: 18px 20px 20px; }
+    .manage-project-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-weight: 700; }
+    .manage-project-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-primary); margin: 6px 0 8px; }
+    .manage-project-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.55; }
+    .manage-project-progress-label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+    .manage-project-progress-bar {
+      width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 20px;
+      overflow: hidden; margin-bottom: 16px;
+    }
+    body.light-mode .manage-project-progress-bar { background: rgba(0,0,0,0.08); }
+    .manage-project-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 20px; }
+    .manage-project-actions { display: flex; gap: 10px; }
+    .manage-project-actions a {
+      flex: 1; text-align: center; padding: 9px 12px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; border: 1px solid var(--border-color); color: var(--text-primary); transition: all 0.2s ease;
+    }
+    .manage-project-actions a:hover { border-color: var(--accent); color: var(--gold); }
+    .manage-project-actions a.primary { background: var(--accent); color: #ffffff; border-color: var(--accent); }
+    .manage-project-actions a.primary:hover { background: var(--accent-hover); color: #ffffff; }
+
     /* ================= RESPONSIVE ================= */
     @media (max-width: 900px) {
       .sidebar { transform: translateX(-100%); }
@@ -132,14 +170,14 @@
       .main { margin-left: 0; }
     }
 
-    /* PASTIKAN CURSOR NORMAL SELALU TERLIHAT DI HALAMAN INI */
+    /* PASTIKAN CURSOR NORMAL SELALU TERLIHAT DI HALAMAN ADMIN */
     .cursor-dot, .cursor-ring { display: none !important; }
     @media (hover: hover) and (pointer: fine) {
       body, a, button, input, textarea,
-      .action-card, .stat-card, .filter-btn, .service-card {
+      .action-card, .stat-card, .filter-btn, .service-card, .manage-project-card {
         cursor: auto !important;
       }
-      a, button, .action-card, .auth-btn, .logout-btn, .side-link {
+      a, button, .action-card, .auth-btn, .logout-btn, .side-link, .manage-project-actions a {
         cursor: pointer !important;
       }
     }

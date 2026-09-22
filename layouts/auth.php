@@ -1,16 +1,15 @@
 <?php
 // ============================================
-// DASHBOARD.PHP — USER BIASA
+// LAYOUTS/AUTH.PHP — CEK SESSION ADMIN
+// Dipakai di setiap halaman admin (dashboard_admin.php, projects.php, dll)
 // ============================================
 
 session_start();
 
-if (!isset($_SESSION["username"])) {
+if (!isset($_SESSION["username"]) || !isset($_SESSION["is_admin"])) {
     header("Location: login.php");
     exit;
 }
-
-$nama_user = htmlspecialchars($_SESSION["username"]);
 
 $nama_admin = htmlspecialchars($_SESSION["username"]);
 $jam_login  = date("H:i", time());
