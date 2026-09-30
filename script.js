@@ -291,19 +291,42 @@ document.addEventListener("DOMContentLoaded", () => {
             const nama = nameInput.value.trim();
             const emailPengirim = emailInput.value.trim();
             const pesan = messageInput.value.trim();
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
 
-            const subject = `Pesan baru dari ${nama} (Portofolio)`;
-            const body = `Nama: ${nama}\nEmail: ${emailPengirim}\n\nPesan:\n${pesan}`;
-
-            const mailtoLink = `mailto:${TUJUAN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-            window.location.href = mailtoLink;
-
+            if (submitBtn) submitBtn.disabled = true;
             if (formStatus) {
-                formStatus.textContent = 'Aplikasi email kamu akan terbuka — tinggal klik "Kirim" di sana untuk menyelesaikan.';
-                formStatus.classList.add('success');
+                formStatus.textContent = 'Mengirim pesan...';
+                formStatus.classList.remove('success');
             }
-            contactForm.reset();
+
+            fetch('contact.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nama,
+                    email: emailPengirim,
+                    pesan,
+                    csrf: csrfMeta ? csrfMeta.content : ''
+                })
+            })
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (formStatus) {
+                        formStatus.textContent = data.message || (ok ? 'Pesan terkirim.' : 'Gagal mengirim pesan.');
+                        formStatus.classList.toggle('success', ok);
+                    }
+                    if (ok) contactForm.reset();
+                })
+                .catch(() => {
+                    if (formStatus) {
+                        formStatus.textContent = 'Tidak bisa terhubung ke server. Coba lagi nanti.';
+                        formStatus.classList.remove('success');
+                    }
+                })
+                .finally(() => {
+                    if (submitBtn) submitBtn.disabled = false;
+                });
         });
     }
 });

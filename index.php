@@ -1,6 +1,13 @@
+<?php
+// INDEX.PHP — sama seperti index.html, tapi bagian "Hall of Creations" diambil dari database
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/config/helpers.php';
+$daftar_proyek = $pdo->query('SELECT * FROM projects ORDER BY id ASC')->fetchAll();
+?>
 <!doctype html>
 <html lang="id">
   <head>
+    <meta name="csrf-token" content="<?= e(csrf_token()) ?>" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050508" />
@@ -91,7 +98,12 @@
         <li><a href="#works" class="nav-link">Works</a></li>
         <li><a href="#skills" class="nav-link">Skills</a></li>
         <li><a href="#contact" class="nav-link">Contact</a></li>
+        <?php if (!empty($_SESSION['user_id'])) { ?>
+        <li><a href="<?= ($_SESSION['role'] ?? '') === 'admin' ? 'dashboard_admin.php' : 'dashboard.php' ?>" class="nav-link btn-nav">Dashboard</a></li>
+        <li><a href="logout.php" class="nav-link">Logout</a></li>
+        <?php } else { ?>
         <li><a href="login.php" class="nav-link btn-nav">Login</a></li>
+        <?php } ?>
         <li>
           <button
             id="themeToggle"
@@ -324,65 +336,40 @@
       </div>
 
       <div class="projects-grid-agency">
-        <!-- Project 1: Gelar Karya SMK TI AIRLANGGA -->
+        <?php if (!$daftar_proyek) { ?>
+          <p class="section-desc">Belum ada proyek yang ditampilkan.</p>
+        <?php } ?>
+        <?php foreach ($daftar_proyek as $p) {
+          $caption = $p['title'] . ' — ' . $p['description'];
+          if ($p['progress'] !== null) $caption .= ' (Progress: ' . (int) $p['progress'] . '%)';
+        ?>
         <div
           class="project-card-agency"
-          data-category="web"
-          data-img="WhatsApp Image 2026-09-02 at 22.03.25.jpeg"
-          data-video="WhatsApp Video 2026-09-02 at 22.04.48.mp4"
-          data-caption="PROJECT GELAR KARYA SMK TI AIRLANGGA -- MENGGUNAKAN WORDPRESS DALAM PROJECT TERSEBUT"
+          data-category="<?= e($p['category']) ?>"
+          data-img="<?= e($p['img']) ?>"
+          <?php if (!empty($p['video'])) { ?>data-video="<?= e($p['video']) ?>"<?php } ?>
+          data-caption="<?= e($caption) ?>"
         >
           <div class="img-container-agency">
-            <img
-              src="WhatsApp Image 2026-09-02 at 22.03.25.jpeg"
-              alt="PROJECT GELAR KARYA SMK TI AIRLANGGA"
-            />
+            <img src="<?= e($p['img']) ?>" alt="<?= e($p['title']) ?>" />
+            <?php if (!empty($p['video'])) { ?>
             <div class="play-overlay">
               <i class="fa-solid fa-circle-play"></i>
             </div>
+            <?php } ?>
           </div>
           <div class="project-info">
-            <span class="project-tag">WordPress / CMS</span>
-            <h4>PROJECT GELAR KARYA SMK TI AIRLANGGA</h4>
-            <p>Menggunakan WordPress dalam project tersebut.</p>
-            <a
-              href="#"
-              class="project-link"
-              target="_blank"
-              rel="noopener"
-              onclick="event.stopPropagation()"
-            >
-              Lihat Proyek
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 2: Misteri Ambaruwoo -->
-        <div
-          class="project-card-agency"
-          data-category="game"
-          data-img="Screenshot 2026-09-02 214603.png"
-          data-caption="Misteri Ambaruwoo - Game Development (Progress: 10%)"
-        >
-          <div class="img-container-agency">
-            <img
-              src="Screenshot 2026-09-02 214603.png"
-              alt="Game Misteri Ambaruwoo"
-            />
-          </div>
-          <div class="project-info">
-            <span class="project-tag">C# / Unity Engine</span>
-            <h4>Misteri Ambaruwoo</h4>
-            <p>
-              Proyek game misteri yang sedang dikembangkan menggunakan Unity.
-            </p>
+            <span class="project-tag"><?= e($p['tag']) ?></span>
+            <h4><?= e($p['title']) ?></h4>
+            <p><?= e($p['description']) ?></p>
+            <?php if ($p['progress'] !== null) { ?>
             <div class="project-progress">
-              <span class="progress-label">Progress Game: 10%</span>
+              <span class="progress-label">Progress: <?= (int) $p['progress'] ?>%</span>
               <div class="progress-bar">
-                <div class="progress-fill" style="width: 10%"></div>
+                <div class="progress-fill" style="width: <?= (int) $p['progress'] ?>%"></div>
               </div>
             </div>
+            <?php } ?>
             <a
               href="#"
               class="project-link"
@@ -395,40 +382,7 @@
             </a>
           </div>
         </div>
-
-        <!-- Project 3: CRUD Management App -->
-        <div
-          class="project-card-agency"
-          data-category="web"
-          data-img="Screenshot 2026-09-02 222534.png"
-          data-caption="CRUD 1.PY - Aplikasi Manajemen Member dengan Python"
-        >
-          <div class="img-container-agency">
-            <img
-              src="Screenshot 2026-09-02 222534.png"
-              alt="CRUD Python Project"
-            />
-          </div>
-          <div class="project-info">
-            <span class="project-tag">Python / CLI</span>
-            <h4>CRUD Management App</h4>
-            <p>
-              Aplikasi pengelolaan data member berbasis Python menggunakan
-              fungsi penambahan, pengubahan, dan penampilan data berstruktur
-              list & dictionary.
-            </p>
-            <a
-              href="#"
-              class="project-link"
-              target="_blank"
-              rel="noopener"
-              onclick="event.stopPropagation()"
-            >
-              Lihat Proyek
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-          </div>
-        </div>
+        <?php } ?>
       </div>
     </section>
 

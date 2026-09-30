@@ -1,77 +1,27 @@
 <?php
-// $active_page dipakai untuk nandain menu mana yang lagi aktif.
-// Diset di masing-masing halaman SEBELUM include layouts/sidebar.php.
-// Contoh: $active_page = 'dashboard'; atau $active_page = 'projects';
 $active_page = $active_page ?? '';
+$belum_dibaca = (int) $pdo->query('SELECT COUNT(*) FROM messages WHERE dibaca = 0')->fetchColumn();
+function side_link($href, $icon, $label, $key, $active, $badge = 0) {
+    $cls = 'side-link' . ($active === $key ? ' active' : '');
+    echo '<a href="' . e($href) . '" class="' . $cls . '"><i class="fa-solid ' . e($icon) . '"></i> ' . e($label);
+    if ($badge > 0) echo '<span class="side-badge">' . (int) $badge . '</span>';
+    echo '</a>';
+}
 ?>
+  <aside class="admin-sidebar">
+    <div class="side-logo">FARLES<span class="dot">.</span></div>
+    <?php
+    side_link('dashboard_admin.php', 'fa-gauge', 'Dashboard', 'dashboard', $active_page);
+    side_link('projects.php', 'fa-briefcase', 'Kelola Proyek', 'projects', $active_page);
+    side_link('messages.php', 'fa-inbox', 'Pesan Masuk', 'messages', $active_page, $belum_dibaca);
+    side_link('users.php', 'fa-users', 'Pengguna', 'users', $active_page);
+    side_link('report.php', 'fa-print', 'Laporan', 'report', $active_page);
+    ?>
+    <div class="side-sep"></div>
+    <a href="index.php" class="side-link" target="_blank" rel="noopener"><i class="fa-solid fa-house"></i> Lihat Situs</a>
+    <button type="button" class="side-link" id="themeToggleAdmin"><i class="fa-solid fa-circle-half-stroke"></i> <span id="themeLabel">Ganti Tema</span></button>
+    <div class="side-spacer"></div>
+    <a href="logout.php" class="side-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+  </aside>
 
-<!-- CUSTOM ANIME CURSOR -->
-<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-
-<div class="sakura-container" aria-hidden="true">
-  <div class="sakura"></div>
-  <div class="sakura"></div>
-  <div class="sakura"></div>
-  <div class="sakura"></div>
-  <div class="sakura"></div>
-</div>
-
-<div class="sparkle-field" aria-hidden="true">
-  <span class="sparkle"></span>
-  <span class="sparkle"></span>
-  <span class="sparkle"></span>
-  <span class="sparkle"></span>
-  <span class="sparkle"></span>
-  <span class="sparkle"></span>
-</div>
-
-<!-- TOMBOL SIDEBAR (MOBILE) -->
-<button id="sidebarToggle" class="sidebar-toggle" aria-label="Buka menu">
-  <i class="fa-solid fa-bars"></i>
-</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<button id="themeToggle" class="theme-toggle admin-theme-toggle" aria-label="Toggle Theme">
-  <span id="themeIcon">☀️</span>
-</button>
-
-<!-- ================= SIDEBAR ================= -->
-<aside class="sidebar" id="sidebar" aria-label="Menu admin">
-  <div class="logo">
-    FARLES<span class="dot">.</span>
-    <small>ADMIN PANEL</small>
-  </div>
-
-  <div class="nav-label">Menu</div>
-  <nav class="side-nav">
-    <a href="dashboard_admin.php" class="side-link <?= $active_page === 'dashboard' ? 'active' : '' ?>">
-      <i class="fa-solid fa-gauge-high"></i> Dashboard
-    </a>
-    <a href="index.html" class="side-link">
-      <i class="fa-solid fa-house"></i> Lihat Portofolio
-    </a>
-    <a href="projects.php" class="side-link <?= $active_page === 'projects' ? 'active' : '' ?>">
-      <i class="fa-solid fa-briefcase"></i> Kelola Proyek
-    </a>
-    <a href="mailto:jhonatanfarles@gmail.com" class="side-link">
-      <i class="fa-solid fa-inbox"></i> Cek Pesan
-    </a>
-  </nav>
-
-  <div class="sidebar-footer">
-    <div class="admin-chip">
-      <div class="avatar"><?= strtoupper(substr($nama_admin, 0, 1)) ?></div>
-      <div class="info">
-        <span>Logged in as</span>
-        <strong><?= $nama_admin ?></strong>
-      </div>
-    </div>
-    <a href="logout.php" class="logout-btn">
-      <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
-  </div>
-</aside>
-
-<!-- ================= KONTEN UTAMA ================= -->
-<main class="main">
+  <main class="admin-main">

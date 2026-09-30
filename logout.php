@@ -1,12 +1,14 @@
 <?php
 // ============================================
-// LOGOUT.PHP — VERSI SEDERHANA
-// Hapus session, lalu langsung balik ke portofolio (index.html)
+// LOGOUT.PHP — hapus session lalu kembali ke portofolio
 // ============================================
-
 session_start();
-session_unset();   // hapus semua data session
-session_destroy(); // hancurkan session-nya
+$_SESSION = [];
+if (ini_get('session.use_cookies')) {
+    $p = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+}
+session_destroy();
 
-header("Location: index.html");
+header('Location: index.php');
 exit;

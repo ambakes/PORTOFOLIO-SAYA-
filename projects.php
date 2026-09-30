@@ -1,92 +1,103 @@
 <?php
 // ============================================
-// PROJECTS.PHP — KELOLA PROYEK
-// Menampilkan proyek yang ada di Hall of Creations (index.html).
-// Data proyek masih diambil langsung dari sini (belum ada database),
-// jadi kalau mau ubah judul/deskripsi/gambar, sesuaikan array $projects
-// di bawah DAN juga bagian #works di index.html biar tetap sinkron.
+// PROJECTS.PHP — KELOLA PROYEK (CRUD dari database)
+// Ada pencarian + filter kategori (FR-03).
 // ============================================
 $active_page = 'projects';
+$page_title  = 'Kelola Proyek';
 
 include 'layouts/auth.php';
+
+$q   = trim($_GET['q'] ?? '');
+$kat = $_GET['kategori'] ?? 'all';
+
+$sql    = 'SELECT * FROM projects WHERE 1=1';
+$params = [];
+if ($q !== '') {
+    $sql .= ' AND (title LIKE ? OR tag LIKE ? OR description LIKE ?)';
+    $like = '%' . $q . '%';
+    array_push($params, $like, $like, $like);
+}
+if (in_array($kat, ['web', 'game'], true)) {
+    $sql .= ' AND category = ?';
+    $params[] = $kat;
+} else {
+    $kat = 'all';
+}
+$sql .= ' ORDER BY id DESC';
+$st = $pdo->prepare($sql);
+$st->execute($params);
+$projects = $st->fetchAll();
+
 include 'layouts/header.php';
 include 'layouts/sidebar.php';
-
-$projects = [
-    [
-        "tag"      => "WordPress / CMS",
-        "title"    => "PROJECT GELAR KARYA SMK TI AIRLANGGA",
-        "desc"     => "Menggunakan WordPress dalam project tersebut.",
-        "img"      => "WhatsApp Image 2026-09-02 at 22.03.25.jpeg",
-        "progress" => null,
-    ],
-    [
-        "tag"      => "C# / Unity Engine",
-        "title"    => "Misteri Ambaruwoo",
-        "desc"     => "Proyek game misteri yang sedang dikembangkan menggunakan Unity.",
-        "img"      => "Screenshot 2026-09-02 214603.png",
-        "progress" => 10,
-    ],
-    [
-        "tag"      => "Python / CLI",
-        "title"    => "CRUD Management App",
-        "desc"     => "Aplikasi pengelolaan data member berbasis Python menggunakan fungsi penambahan, pengubahan, dan penampilan data berstruktur list & dictionary.",
-        "img"      => "Screenshot 2026-09-02 222534.png",
-        "progress" => null,
-    ],
-];
 ?>
 
     <div class="container">
 
-      <div class="projects-page-header">
+      <div class="page-head">
         <div>
-          <h1 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 4px;">
-            Kelola Proyek
-          </h1>
-          <p style="color: var(--text-secondary); font-size: 0.88rem;">
-            <?= count($projects) ?> proyek sedang ditampilkan di Hall of Creations
-          </p>
+          <h1>Kelola Proyek</h1>
+          <p><?= count($projects) ?> proyek<?= ($q !== '' || $kat !== 'all') ? ' (hasil filter)' : ' ditampilkan di Hall of Creations' ?></p>
         </div>
+        <a href="project_form.php" class="abtn"><i class="fa-solid fa-plus"></i> Tambah Proyek</a>
       </div>
 
-      <div class="projects-note">
-        <i class="fa-solid fa-circle-info"></i>
-        Data proyek di halaman ini masih diambil langsung dari kode (belum pakai database).
-        Untuk nambah, ubah, atau hapus proyek, edit array <code>$projects</code> di <code>projects.php</code>
-        dan bagian <code>#works</code> di <code>index.html</code> biar tetap sinkron.
-      </div>
+      <?php flash_show(); ?>
 
-      <div class="projects-manage-grid">
-        <?php foreach ($projects as $p) { ?>
-          <div class="manage-project-card">
-            <div class="manage-project-thumb">
-              <img src="<?= htmlspecialchars($p['img']) ?>" alt="<?= htmlspecialchars($p['title']) ?>">
-            </div>
-            <div class="manage-project-body">
-              <span class="manage-project-tag"><?= htmlspecialchars($p['tag']) ?></span>
-              <h3 class="manage-project-title"><?= htmlspecialchars($p['title']) ?></h3>
-              <p class="manage-project-desc"><?= htmlspecialchars($p['desc']) ?></p>
+      <form method="GET" class="toolbar">
+        <input type="search" name="q" value="<?= e($q) ?>" placeholder="Cari judul, tag, atau deskripsi...">
+        <select name="kategori">
+          <option value="all"  <?= $kat === 'all'  ? 'selected' : '' ?>>Semua kategori</option>
+          <option value="web"  <?= $kat === 'web'  ? 'selected' : '' ?>>Web</option>
+          <option value="game" <?= $kat === 'game' ? 'selected' : '' ?>>Game</option>
+        </select>
+        <button type="submit" class="abtn abtn-ghost"><i class="fa-solid fa-magnifying-glass"></i> Cari</button>
+        <?php if ($q !== '' || $kat !== 'all') { ?><a href="projects.php" class="abtn abtn-ghost">Reset</a><?php } ?>
+      </form>
 
-              <?php if ($p['progress'] !== null) { ?>
-                <span class="manage-project-progress-label">Progress: <?= (int) $p['progress'] ?>%</span>
-                <div class="manage-project-progress-bar">
-                  <div class="manage-project-progress-fill" style="width: <?= (int) $p['progress'] ?>%;"></div>
-                </div>
+      <div class="panel">
+        <?php if (!$projects) { ?>
+          <div class="empty">Tidak ada proyek ditemukan.</div>
+        <?php } else { ?>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Gambar</th><th>Proyek</th><th>Kategori</th><th>Progress</th><th>Aksi</th></tr>
+              </thead>
+              <tbody>
+              <?php foreach ($projects as $p) { ?>
+                <tr>
+                  <td><img class="thumb" src="<?= e($p['img']) ?>" alt=""></td>
+                  <td>
+                    <strong><?= e($p['title']) ?></strong>
+                    <div class="muted" style="font-size:.78rem"><?= e($p['tag']) ?></div>
+                  </td>
+                  <td><span class="pill"><?= e($p['category']) ?></span></td>
+                  <td>
+                    <?php if ($p['progress'] !== null) { ?>
+                      <div class="bar"><span style="width: <?= (int) $p['progress'] ?>%"></span></div>
+                      <span class="muted" style="font-size:.78rem"><?= (int) $p['progress'] ?>%</span>
+                    <?php } else { ?><span class="muted">—</span><?php } ?>
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <a href="project_form.php?id=<?= (int) $p['id'] ?>" class="abtn abtn-ghost abtn-sm"><i class="fa-solid fa-pen"></i> Ubah</a>
+                      <form method="POST" action="project_delete.php" data-confirm="Hapus proyek '<?= e($p['title']) ?>'? Tindakan ini tidak bisa dibatalkan.">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+                        <button type="submit" class="abtn abtn-danger abtn-sm"><i class="fa-solid fa-trash"></i> Hapus</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
               <?php } ?>
-
-              <div class="manage-project-actions">
-                <a href="index.html#works" target="_blank" rel="noopener">
-                  <i class="fa-solid fa-eye"></i> Lihat di Situs
-                </a>
-              </div>
-            </div>
+              </tbody>
+            </table>
           </div>
         <?php } ?>
       </div>
 
     </div>
 
-<?php
-include 'layouts/footer.php';
-?>
+<?php include 'layouts/footer.php'; ?>
