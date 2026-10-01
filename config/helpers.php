@@ -63,3 +63,11 @@ function path_aman($p) {
         && $p[0] !== '/'
         && preg_match('/^[\w .()\-\/]+$/u', $p) === 1;
 }
+
+// Akun pemilik utama (super admin). Akun ini TIDAK bisa diturunkan atau dihapus
+// oleh siapa pun lewat halaman Pengguna, dan hanya dia yang boleh mengatur role.
+const OWNER_EMAIL = 'jhonatanfarles@gmail.com';
+
+function is_owner_email($email) {
+    return strcasecmp((string) $email, OWNER_EMAIL) === 0;
+}
